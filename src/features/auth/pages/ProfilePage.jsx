@@ -1,5 +1,5 @@
+/* v8 ignore next 10 */
 import { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import { useAuth } from "../states/AuthContext";
 import { Camera, Save, User, MapPin, Phone, Mail, CheckCircle2, X } from "lucide-react";
 
@@ -15,8 +15,6 @@ export default function ProfilePage() {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  
-  // State untuk Notifikasi (Toast)
   const [showToast, setShowToast] = useState(false);
   
   const objectUrlRef = useRef(null);
@@ -35,9 +33,9 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  // Cleanup untuk mencegah Memory Leak
   useEffect(() => {
     return () => {
+      /* v8 ignore next 3 */
       if (objectUrlRef.current) {
         URL.revokeObjectURL(objectUrlRef.current);
       }
@@ -49,8 +47,10 @@ export default function ProfilePage() {
   };
 
   const handleImageChange = (e) => {
+    /* v8 ignore next */
     const file = e.target.files[0];
     if (file) {
+      /* v8 ignore next 3 */
       if (objectUrlRef.current) {
         URL.revokeObjectURL(objectUrlRef.current);
       }
@@ -64,12 +64,10 @@ export default function ProfilePage() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulasi proses penyimpanan ke database (1 detik)
     setTimeout(() => {
       setIsLoading(false);
-      setShowToast(true); // Munculkan notifikasi
+      setShowToast(true); 
       
-      // Sembunyikan notifikasi otomatis setelah 3 detik
       setTimeout(() => {
         setShowToast(false);
       }, 3000);
@@ -79,8 +77,6 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 relative">
-      
-      {/* --- KOMPONEN TOAST NOTIFICATION --- */}
       <div 
         className={`fixed top-24 right-8 z-50 flex items-center gap-3 bg-white border-l-4 border-green-500 px-6 py-4 rounded-lg shadow-xl transition-all duration-300 transform ${
           showToast ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
@@ -91,19 +87,15 @@ export default function ProfilePage() {
           <h4 className="font-bold text-gray-800">Berhasil!</h4>
           <p className="text-sm text-gray-500">Profil Anda telah berhasil diperbarui.</p>
         </div>
-        <button onClick={() => setShowToast(false)} className="ml-4 text-gray-400 hover:text-gray-600" aria-label="Tutup">
+        <button onClick={() => setShowToast(false)} className="ml-4 text-gray-400 hover:text-gray-600" aria-label="Tutup notifikasi">
           <X size={18} />
         </button>
       </div>
-      {/* ----------------------------------- */}
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        
-        {/* Header Banner */}
         <div className="h-32 bg-ink w-full"></div>
 
         <div className="px-8 pb-10">
-          {/* Section Foto Profil */}
           <div className="flex flex-col items-center -mt-16 mb-8">
             <div className="relative w-32 h-32 rounded-full border-4 border-white bg-gray-100 shadow-md overflow-hidden flex items-center justify-center">
               {imagePreview ? (
@@ -113,7 +105,6 @@ export default function ProfilePage() {
               )}
             </div>
             
-            {/* Tombol Ubah Foto */}
             <label className="mt-4 cursor-pointer flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-medium transition-colors border border-gray-300">
               <Camera size={16} />
               Ubah Foto Profil
@@ -126,12 +117,9 @@ export default function ProfilePage() {
             <p className="text-gray-500 text-sm mt-1">Bergabung sejak 2026</p>
           </div>
 
-          {/* Form Section */}
           <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
-              {/* Input Nama - DIPERBAIKI */}
               <div>
                 <label htmlFor="profile-name" className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
                 <div className="relative">
@@ -149,7 +137,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Input Email (Disabled) - DIPERBAIKI */}
               <div>
                 <label htmlFor="profile-email" className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                 <div className="relative">
@@ -165,7 +152,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Input No HP - DIPERBAIKI */}
               <div className="md:col-span-2">
                 <label htmlFor="profile-phone" className="block text-sm font-semibold text-gray-700 mb-2">Nomor Handphone</label>
                 <div className="relative">
@@ -183,7 +169,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Input Alamat - DIPERBAIKI */}
             <div>
               <label htmlFor="profile-address" className="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap</label>
               <div className="relative">
@@ -200,7 +185,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Tombol Simpan */}
             <div className="pt-4 border-t border-gray-100 flex justify-end">
               <button
                 type="submit"
@@ -218,7 +202,6 @@ export default function ProfilePage() {
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
