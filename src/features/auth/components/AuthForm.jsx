@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PropTypes from "prop-types"; // Tambahan
+import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { login as loginApi, register as registerApi } from "../api/authApi";
 import { useAuth } from "../states/AuthContext";
@@ -40,39 +40,64 @@ export default function AuthForm({ mode }) {
       {register && (
         <>
           <label className="label">
-            <span>Nama</span> {/* Diperbaiki: dibungkus span */}
+            <span>Nama</span>
             <input className="field" required value={f.name} onChange={set("name")} />
           </label>
           <label className="label">
-            <span>Provinsi</span> {/* Diperbaiki: dibungkus span */}
+            <span>Provinsi</span>
             <select className="field" value={f.province} onChange={handleProvinceChange}>
               <option value="">Pilih Provinsi</option>
               {INDONESIA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </label>
           <label className="label">
-            <span>Kabupaten / Kota</span> {/* Diperbaiki: dibungkus span */}
+            <span>Kabupaten / Kota</span>
             <select className="field" value={f.city} onChange={set("city")}>
               <option value="">{f.province ? "Pilih Kabupaten / Kota" : "Pilih provinsi dahulu"}</option>
               {regencies.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </label>
           <label className="label">
-            <span>Alamat lengkap</span> {/* Diperbaiki: dibungkus span */}
+            <span>Alamat lengkap</span>
             <input className="field" placeholder="Nama jalan, nomor rumah, RT/RW" value={f.address || ""} onChange={set("address")} />
           </label>
         </>
       )}
+      
+      {/* TAMBAHKAN ID="username" DI SINI */}
       <label className="label">
         <span>Email</span>
-        <input className="field" type="email" required value={f.email} onChange={set("email")} />
+        <input 
+          id="username" 
+          className="field" 
+          type="email" 
+          required 
+          value={f.email} 
+          onChange={set("email")} 
+        />
       </label>
+
+      {/* TAMBAHKAN ID="password" DI SINI */}
       <label className="label">
         <span>Kata sandi</span>
-        <input className="field" type="password" required minLength={6} value={f.password} onChange={set("password")} />
+        <input 
+          id="password" 
+          className="field" 
+          type="password" 
+          required 
+          minLength={6} 
+          value={f.password} 
+          onChange={set("password")} 
+        />
       </label>
+
       {error && <p role="alert" className="font-semibold text-red-700">{error}</p>}
-      <button className="btn">{register ? "Daftar" : "Masuk"}</button>
+      
+      {/* TAMBAHKAN ID="btn-submit" DI SINI */}
+      <button id="btn-submit" className="btn">
+        {register ? "Daftar" : "Masuk"}
+      </button>
+      
       <p className="text-sm text-ink2">
         {register ? (
           <>Sudah punya akun? <Link className="font-semibold underline" to="/login">Masuk</Link></>
@@ -84,7 +109,6 @@ export default function AuthForm({ mode }) {
   );
 }
 
-// Tambahan: Props Validation
 AuthForm.propTypes = {
   mode: PropTypes.oneOf(["login", "register"]).isRequired,
 };
