@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"; // Tambahan: Import PropTypes
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, MapPin, ShoppingBag } from "lucide-react";
 import CategoryIcon from "./CategoryIcon";
@@ -25,7 +26,10 @@ export default function ItemCard({ item }) {
     addToCart(item);
   };
 
-  const style = item.image ? { background: `center / cover url(${item.image})` } : { background: tint(item.category) };
+  const style = item.image 
+    ? { background: `center / cover url(${item.image})` } 
+    : { background: tint(item.category) };
+
   return (
     <article className="relative overflow-hidden rounded-2xl border border-line bg-white transition-transform hover:-translate-y-1 motion-reduce:transition-none group">
       <Link to={`/item/${item.id}`} aria-label={item.title}>
@@ -54,13 +58,42 @@ export default function ItemCard({ item }) {
             )}
           </div>
           <h3 className="leading-snug font-semibold mt-1 line-clamp-1">{item.title}</h3>
-          <p className="mt-1 flex items-center gap-1 text-sm text-ink2"><MapPin size={14} aria-hidden="true" />{[item.city, item.province].filter(Boolean).join(", ") || item.address || "Indonesia"} · {item.condition}</p>
+          <p className="mt-1 flex items-center gap-1 text-sm text-ink2">
+            <MapPin size={14} aria-hidden="true" />
+            {[item.city, item.province].filter(Boolean).join(", ") || item.address || "Indonesia"} · {item.condition}
+          </p>
         </div>
       </Link>
-      {item.status === "sold" && <span className="absolute top-3 left-0 rounded-r-full bg-red-700 px-3 py-0.5 text-sm font-semibold text-white">Terjual</span>}
-      <button onClick={onFav} aria-label={fav ? "Hapus dari favorit" : "Simpan ke favorit"} className="absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm hover:scale-105 transition-transform">
+      
+      {item.status === "sold" && (
+        <span className="absolute top-3 left-0 rounded-r-full bg-red-700 px-3 py-0.5 text-sm font-semibold text-white">
+          Terjual
+        </span>
+      )}
+      
+      <button 
+        onClick={onFav} 
+        aria-label={fav ? "Hapus dari favorit" : "Simpan ke favorit"} 
+        className="absolute top-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm hover:scale-105 transition-transform"
+      >
         <Heart size={18} className={fav ? "fill-red-700 text-red-700" : "text-ink"} aria-hidden="true" />
       </button>
     </article>
   );
 }
+
+// Tambahan: Props Validation
+ItemCard.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    category: PropTypes.string,
+    condition: PropTypes.string,
+    image: PropTypes.string,
+    address: PropTypes.string,
+    province: PropTypes.string,
+    city: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+};

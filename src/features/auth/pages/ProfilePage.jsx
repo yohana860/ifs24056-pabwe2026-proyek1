@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import { useAuth } from "../states/AuthContext";
 import { Camera, Save, User, MapPin, Phone, Mail, CheckCircle2, X } from "lucide-react";
 
@@ -17,6 +18,8 @@ export default function ProfilePage() {
   
   // State untuk Notifikasi (Toast)
   const [showToast, setShowToast] = useState(false);
+  
+  const objectUrlRef = useRef(null);
 
   useEffect(() => {
     if (user) {
@@ -32,6 +35,15 @@ export default function ProfilePage() {
     }
   }, [user]);
 
+  // Cleanup untuk mencegah Memory Leak
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+    };
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -39,7 +51,12 @@ export default function ProfilePage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+      }
+      const newUrl = URL.createObjectURL(file);
+      objectUrlRef.current = newUrl;
+      setImagePreview(newUrl);
     }
   };
 
@@ -74,7 +91,7 @@ export default function ProfilePage() {
           <h4 className="font-bold text-gray-800">Berhasil!</h4>
           <p className="text-sm text-gray-500">Profil Anda telah berhasil diperbarui.</p>
         </div>
-        <button onClick={() => setShowToast(false)} className="ml-4 text-gray-400 hover:text-gray-600">
+        <button onClick={() => setShowToast(false)} className="ml-4 text-gray-400 hover:text-gray-600" aria-label="Tutup">
           <X size={18} />
         </button>
       </div>
@@ -113,12 +130,14 @@ export default function ProfilePage() {
           <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Input Nama */}
+              
+              {/* Input Nama - DIPERBAIKI */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                <label htmlFor="profile-name" className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                   <input
+                    id="profile-name"
                     type="text"
                     name="name"
                     value={formData.name}
@@ -130,12 +149,13 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Input Email (Disabled) */}
+              {/* Input Email (Disabled) - DIPERBAIKI */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                <label htmlFor="profile-email" className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                   <input
+                    id="profile-email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -145,12 +165,13 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Input No HP */}
+              {/* Input No HP - DIPERBAIKI */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Nomor Handphone</label>
+                <label htmlFor="profile-phone" className="block text-sm font-semibold text-gray-700 mb-2">Nomor Handphone</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                   <input
+                    id="profile-phone"
                     type="tel"
                     name="phone"
                     value={formData.phone}
@@ -162,12 +183,13 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Input Alamat */}
+            {/* Input Alamat - DIPERBAIKI */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap</label>
+              <label htmlFor="profile-address" className="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap</label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-4 text-gray-400" size={18} />
                 <textarea
+                  id="profile-address"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
