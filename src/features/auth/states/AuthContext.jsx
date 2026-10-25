@@ -5,23 +5,23 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [favs, setFavs] = useState([]); // Asumsi ada state favorit
-  const [ready, setReady] = useState(false); 
+  const [favs, setFavs] = useState([]); 
+  const [ready, setReady] = useState(false); // State penanda sesi sudah siap
 
-  // Cek token saat aplikasi pertama kali dimuat
   useEffect(() => {
+    // Cek token di localStorage saat aplikasi pertama kali dimuat
     const token = globalThis.localStorage?.getItem("token");
     if (token) {
-      // Jika ada token, anggap user sudah login
-      // (Idealnya panggil API untuk verifikasi token dan ambil data user)
       setUser({ token }); 
     }
+    // Set ready menjadi true SETELAH pengecekan selesai
     setReady(true); 
   }, []);
 
   const login = async (token) => {
-    globalThis.localStorage?.setItem("token", token); // Simpan token ke localStorage
-    setUser({ token }); // Update state
+    globalThis.localStorage?.setItem("token", token);
+    setUser({ token });
+    setReady(true); // Pastikan ready tetap true saat login
   };
 
   const logout = () => {
