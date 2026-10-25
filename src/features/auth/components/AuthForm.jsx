@@ -37,38 +37,41 @@ export default function AuthForm({ mode }) {
   return (
     <form className="panel" onSubmit={submit}>
       <h1 className="text-2xl font-extrabold">{register ? "Buat akun" : "Masuk"}</h1>
+      
       {register && (
         <>
           <label className="label">
             <span>Nama</span>
-            <input className="field" required value={f.name} onChange={set("name")} />
+            <input className="field" name="name" required value={f.name} onChange={set("name")} />
           </label>
           <label className="label">
             <span>Provinsi</span>
-            <select className="field" value={f.province} onChange={handleProvinceChange}>
+            <select className="field" name="province" value={f.province} onChange={handleProvinceChange}>
               <option value="">Pilih Provinsi</option>
               {INDONESIA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </label>
           <label className="label">
             <span>Kabupaten / Kota</span>
-            <select className="field" value={f.city} onChange={set("city")}>
+            <select className="field" name="city" value={f.city} onChange={set("city")}>
               <option value="">{f.province ? "Pilih Kabupaten / Kota" : "Pilih provinsi dahulu"}</option>
               {regencies.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </label>
           <label className="label">
             <span>Alamat lengkap</span>
-            <input className="field" placeholder="Nama jalan, nomor rumah, RT/RW" value={f.address || ""} onChange={set("address")} />
+            <input className="field" name="address" placeholder="Nama jalan, nomor rumah, RT/RW" value={f.address || ""} onChange={set("address")} />
           </label>
         </>
       )}
       
-      {/* TAMBAHKAN ID="username" DI SINI */}
+      {/* --- INPUT EMAIL/USERNAME --- */}
       <label className="label">
         <span>Email</span>
         <input 
           id="username" 
+          name="username" 
+          data-testid="username"
           className="field" 
           type="email" 
           required 
@@ -77,11 +80,13 @@ export default function AuthForm({ mode }) {
         />
       </label>
 
-      {/* TAMBAHKAN ID="password" DI SINI */}
+      {/* --- INPUT PASSWORD --- */}
       <label className="label">
         <span>Kata sandi</span>
         <input 
           id="password" 
+          name="password" 
+          data-testid="password"
           className="field" 
           type="password" 
           required 
@@ -93,8 +98,12 @@ export default function AuthForm({ mode }) {
 
       {error && <p role="alert" className="font-semibold text-red-700">{error}</p>}
       
-      {/* TAMBAHKAN ID="btn-submit" DI SINI */}
-      <button id="btn-submit" className="btn">
+      {/* --- TOMBOL SUBMIT --- */}
+      <button 
+        id="btn-submit" 
+        data-testid="btn-submit" 
+        className="btn"
+      >
         {register ? "Daftar" : "Masuk"}
       </button>
       
