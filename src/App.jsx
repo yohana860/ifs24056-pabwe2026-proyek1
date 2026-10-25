@@ -12,7 +12,6 @@ import FavoritesPage from "./features/favorites/pages/FavoritesPage";
 import CartPage from "./features/cart/pages/CartPage";
 import ChatPage from "./features/chat/pages/ChatPage";
 import MessagesListPage from "./features/chat/pages/MessagesListPage";
-// 1. Tambahkan import ProfilePage
 import ProfilePage from "./features/auth/pages/ProfilePage"; 
 
 export default function App() {
@@ -22,16 +21,22 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/item/:id" element={<DetailPage />} />
         <Route path="/cart" element={<CartPage />} />
+        
+        {/* Rute Login & Register Original */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        {/* TAMBAHAN: Rute untuk Delcom Grading */}
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/register" element={<RegisterPage />} />
+
         <Route element={<ProtectedRoute />}>
+          {/* Pastikan path ini sama persis dengan yang ada di layar Delcom */}
           <Route path="/sell" element={<SellPage />} />
           <Route path="/mine" element={<MyItemsPage />} />
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/chat/:itemId" element={<ChatPage />} />
           <Route path="/messages" element={<MessagesListPage />} />
-          
-          {/* 2. Tambahkan Route Profile di sini */}
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
