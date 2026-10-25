@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #10303b;
+  --color-ink2: #44606a;
+  --color-brand: #0f5e6e;
+  --color-sun: #f4b73f;
+  --color-line: #d3dfe3;
+  --color-paper: #f2f6f7;
+}
+
+@layer base {
+  body { @apply bg-paper font-sans text-ink; }
+  button, a, select, label[for] { cursor: pointer; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full bg-sun px-5 py-2.5 font-semibold text-ink hover:brightness-95 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand; }
+  .btn-ghost { @apply border-2 border-ink bg-transparent; }
+  .btn-danger { @apply bg-red-700 text-white; }
+  .btn-sm { @apply px-4 py-1.5 text-sm; }
+  .field { @apply w-full rounded-xl border-2 border-line bg-white px-3 py-2.5; }
+  .label { @apply flex flex-col gap-1 text-sm font-semibold; }
+  .panel { @apply mx-auto my-10 flex max-w-md flex-col gap-4 rounded-2xl border border-line bg-white p-7; }
+}
