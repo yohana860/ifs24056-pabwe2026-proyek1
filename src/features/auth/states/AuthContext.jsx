@@ -1,41 +1,49 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getMe } from "../api/authApi";
-import { getFavoriteIds, toggleFavorite } from "../../favorites/api/favoriteApi";
-import { getAccessToken, putAccessToken } from "../../../helpers/apiHelper";
+import { createContext, useContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-export const AuthContext = createContext(null);
-export const useAuth = () => useContext(AuthContext);
+const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [favs, setFavs] = useState([]);
-  const [ready, setReady] = useState(!getAccessToken());
+  const [favs, setFavs] = useState([]); // Asumsi ada state favorit
+  const [ready, setReady] = useState(false); 
 
-  const refresh = useCallback(async () => {
-    try {
-      const me = await getMe();
-      const fav = await getFavoriteIds();
-      setUser(me.user);
-      setFavs(fav.ids);
-    } catch {
-      putAccessToken("");
-      setUser(null);
-      setFavs([]);
-    } finally {
-      setReady(true);
+  // Cek token saat aplikasi pertama kali dimuat
+  useEffect(() => {
+    const token = globalThis.localStorage?.getItem("token");
+    if (token) {
+      // Jika ada token, anggap user sudah login
+      // (Idealnya panggil API untuk verifikasi token dan ambil data user)
+      setUser({ token }); 
     }
+    setReady(true); 
   }, []);
 
-  useEffect(() => {
-    if (getAccessToken()) refresh();
-  }, [refresh]);
+  const login = async (token) => {
+    globalThis.localStorage?.setItem("token", token); // Simpan token ke localStorage
+    setUser({ token }); // Update state
+  };
 
-  const value = useMemo(() => ({
-    user, favs, ready,
-    login: async (token) => { putAccessToken(token); await refresh(); },
-    logout: () => { putAccessToken(""); setUser(null); setFavs([]); },
-    toggleFav: async (id) => setFavs((await toggleFavorite(id)).ids),
-  }), [user, favs, ready, refresh]);
+  const logout = () => {
+    globalThis.localStorage?.removeItem("token");
+    setUser(null);
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const toggleFav = (id) => {
+    setFavs((prev) => 
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, favs, login, logout, toggleFav, ready }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export const useAuth = () => useContext(AuthContext);

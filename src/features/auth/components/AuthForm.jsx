@@ -28,7 +28,12 @@ export default function AuthForm({ mode }) {
     try {
       const data = await (register ? registerApi(f) : loginApi({ email: f.email, password: f.password }));
       await login(data.token);
-      navigate("/mine");
+      
+      // Memberikan jeda sedikit agar state user di AuthContext selesai ter-update
+      setTimeout(() => {
+        navigate("/mine");
+      }, 100);
+      
     } catch (err) {
       setError(err.message);
     }
@@ -65,7 +70,6 @@ export default function AuthForm({ mode }) {
         </>
       )}
       
-      {/* --- INPUT EMAIL/USERNAME --- */}
       <label className="label">
         <span>Email</span>
         <input 
@@ -80,7 +84,6 @@ export default function AuthForm({ mode }) {
         />
       </label>
 
-      {/* --- INPUT PASSWORD --- */}
       <label className="label">
         <span>Kata sandi</span>
         <input 
@@ -98,7 +101,6 @@ export default function AuthForm({ mode }) {
 
       {error && <p role="alert" className="font-semibold text-red-700">{error}</p>}
       
-      {/* --- TOMBOL SUBMIT --- */}
       <button 
         id="btn-submit" 
         data-testid="btn-submit" 
